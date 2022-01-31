@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { apiSlice } from "./features/network-chains/network-chains-api";
+import { apiSlice } from "./features/network-chains";
 
 export const store = configureStore({
   reducer: {

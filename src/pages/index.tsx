@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { v4 } from "uuid";
-import { useGetNetworkChainsQuery } from '../app/features/network-chains/network-chains-api';
+import { useGetNetworkChainsQuery } from '../app/features/network-chains';
 
 const Home: NextPage = () => {
   const { data: networkChains } = useGetNetworkChainsQuery()
