@@ -1,6 +1,7 @@
-export const NETWORK_CHAIN_ICON_BASE_URL = "https://sub.id/images";
-
 import { NetworkChainProperties, NetworkChainsAPIResponse } from "./types";
+
+export const NETWORK_CHAIN_ICON_BASE_URL = "https://sub.id/images";
+export const FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS = 300000 // 5 min
 
 export const sortNetworkChains = (
   networkChains: Array<NetworkChainProperties>,

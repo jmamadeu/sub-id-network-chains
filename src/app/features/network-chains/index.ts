@@ -11,18 +11,37 @@ export const apiSlice = createApi({
     return {
       getNetworkChains: builder.query<NetworkChainProperties[], void>({
         query: () => `/chains/properties`,
-        transformResponse: (networkChainsReturned: NetworkChainsAPIResponse) => {
+        transformResponse: (
+          networkChainsReturned: NetworkChainsAPIResponse,
+        ) => {
           const networkChainsParsed = parseNetworkChains(networkChainsReturned);
 
           return networkChainsParsed;
         },
       }),
-      getNetworkChainStatus: builder.query<void, string>({
+      getNetworkChainStatus: builder.query<boolean, string>({
         query: (network) => `/check/${network}`,
-        transformResponse: () => {
-          
-        }
-      })
+        keepUnusedDataFor: 300,
+        async onQueryStarted(network, { dispatch, queryFulfilled }) {
+          try {
+            const { data: isActive } = await queryFulfilled;
+
+            dispatch(
+              apiSlice.util.updateQueryData(
+                "getNetworkChains",
+                undefined,
+                (draftNetworkChains) => {
+                  draftNetworkChains.map((chain) =>
+                    chain.name === network ? { ...chain, isActive } : chain,
+                  );
+                },
+              ),
+            );
+          } catch (err) {
+            console.log(err);
+          }
+        },
+      }),
     };
   },
 });

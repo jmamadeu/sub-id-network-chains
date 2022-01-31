@@ -2,10 +2,28 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { v4 } from "uuid";
-import { useGetNetworkChainsQuery } from '../app/features/network-chains';
+import {
+  apiSlice,
+  useGetNetworkChainsQuery
+} from "../app/features/network-chains";
+import { FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS } from "../app/features/network-chains/utils";
+import { useAppDispatch } from "../app/hooks";
+import { useInterval } from "../hooks/use-interval";
 
 const Home: NextPage = () => {
-  const { data: networkChains } = useGetNetworkChainsQuery()
+  const dispatch = useAppDispatch();
+  const { data: networkChains } = useGetNetworkChainsQuery();
+
+  useInterval(async () => {
+    networkChains?.map(async (chain) => {
+      dispatch(
+        apiSlice.endpoints.getNetworkChainStatus.initiate(
+          chain.name.toLowerCase(),
+          { forceRefetch: true },
+        ),
+      );
+    });
+  }, FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS);
 
   return (
     <div>
