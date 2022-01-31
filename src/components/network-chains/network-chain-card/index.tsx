@@ -21,9 +21,6 @@ export const NetworkChainCard = ({ chain }: NetworkChainCardProps) => {
         <span>{chain.name}</span>
         <span> - format: ({chain.ss58Format})</span>
         <p>
-          symbol: <b>{chain.tokenSymbol?.join("")}</b>
-        </p>
-        <p>
           decimals: <b> {chain.tokenDecimals?.join("")}</b>
         </p>
       </div>
