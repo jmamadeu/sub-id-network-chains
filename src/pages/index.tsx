@@ -5,8 +5,7 @@ import {
   useGetNetworkChainsQuery
 } from "../app/features/network-chains";
 import {
-  fetchNetworkChainsStatus,
-  FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS
+  fetchNetworkChainsStatus, FETCH_CONNECTION_CHAINS_STATUS_TIME_IN_MLSECONDS
 } from "../app/features/network-chains/utils";
 import { useAppDispatch } from "../app/hooks";
 import { NetworkChainList } from "../components/network-chains/network-chains-list";
@@ -38,7 +37,7 @@ const Home: NextPage = () => {
         ),
       );
     } catch (err) {}
-  }, FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS);
+  }, FETCH_CONNECTION_CHAINS_STATUS_TIME_IN_MLSECONDS);
 
   return (
     <div>
