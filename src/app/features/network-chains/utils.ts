@@ -1,6 +1,6 @@
 export const NETWORK_CHAIN_ICON_BASE_URL = "https://sub.id/images";
 
-import { NetworkChainAPIResponse, NetworkChainProperties } from "./types";
+import { NetworkChainProperties, NetworkChainsAPIResponse } from "./types";
 
 export const sortNetworkChains = (
   networkChains: Array<NetworkChainProperties>,
@@ -13,36 +13,25 @@ export const sortNetworkChains = (
 };
 
 export const parseNetworkChainsToArrayFormat = (
-  networkChainsRaw: NetworkChainAPIResponse,
+  networkChainsRaw: NetworkChainsAPIResponse,
 ) => {
   const networkChainKeys = Object.keys(networkChainsRaw);
 
   const networksChainsParsed = networkChainKeys.map((chainKey) => ({
     ...networkChainsRaw[chainKey],
+    iconURL: `${NETWORK_CHAIN_ICON_BASE_URL}/${networkChainsRaw[chainKey].icon}`,
+    isActive: true,
   }));
 
   return networksChainsParsed;
 };
 
-export const addImageURLToNetworkChains = (
-  networkChains: Array<NetworkChainProperties>,
-) => {
-  const networkChainsSorted = networkChains.map((chain) => ({
-    ...chain,
-    iconURL: `${NETWORK_CHAIN_ICON_BASE_URL}/${chain.icon}`,
-  }));
-
-  return networkChainsSorted;
-};
-
 export const parseNetworkChains = (
-  networkChainsRaw: NetworkChainAPIResponse,
+  networkChainsRaw: NetworkChainsAPIResponse,
 ) => {
-  let networkChainsParsed = parseNetworkChainsToArrayFormat(networkChainsRaw);
-
-  networkChainsParsed = sortNetworkChains(networkChainsParsed);
-
-  networkChainsParsed = addImageURLToNetworkChains(networkChainsParsed);
+  let networkChainsParsed = sortNetworkChains(
+    parseNetworkChainsToArrayFormat(networkChainsRaw),
+  );
 
   return networkChainsParsed;
 };
