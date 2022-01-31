@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { NetworkChainProperties, NetworkChainsAPIResponse } from "./types";
-import { parseNetworkChains } from "./utils";
+import { fetchNetworkChainsStatus, parseNetworkChains } from "./utils";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -11,12 +11,19 @@ export const apiSlice = createApi({
     return {
       getNetworkChains: builder.query<NetworkChainProperties[], void>({
         query: () => `/chains/properties`,
-        transformResponse: (
+        transformResponse: async (
           networkChainsReturned: NetworkChainsAPIResponse,
         ) => {
           const networkChainsParsed = parseNetworkChains(networkChainsReturned);
 
-          return networkChainsParsed;
+          const networkStatus = await fetchNetworkChainsStatus(
+            networkChainsParsed,
+          );
+
+          return networkChainsParsed.map((chain) => ({
+            ...chain,
+            isActive: networkStatus[chain.name.toLowerCase()],
+          }));
         },
       }),
     };
