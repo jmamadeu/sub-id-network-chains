@@ -1,14 +1,17 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { v4 } from "uuid";
 import {
   apiSlice,
   useGetNetworkChainsQuery
 } from "../app/features/network-chains";
-import { fetchNetworkChainsStatus } from "../app/features/network-chains/utils";
+import {
+  fetchNetworkChainsStatus,
+  FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS
+} from "../app/features/network-chains/utils";
 import { useAppDispatch } from "../app/hooks";
-import { NetworkChainCard } from "../components/network-chains/network-chain-card";
+import { NetworkChainList } from "../components/network-chains/network-chains-list";
 import { useInterval } from "../hooks/use-interval";
+import styles from "../styles/home.module.scss";
 
 const Home: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -35,9 +38,7 @@ const Home: NextPage = () => {
         ),
       );
     } catch (err) {}
-  }, 5000);
-
-  console.log(networkChains, "test");
+  }, FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS);
 
   return (
     <div>
@@ -50,12 +51,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <ul>
-          {networkChains?.map((chain) => (
-            <NetworkChainCard key={v4()} chain={chain} />
-          ))}
-        </ul>
+      <main className={styles.main}>
+        <div>
+          <NetworkChainList chains={networkChains ?? []} />
+        </div>
       </main>
     </div>
   );

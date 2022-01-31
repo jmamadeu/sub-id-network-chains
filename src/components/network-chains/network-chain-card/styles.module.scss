@@ -1,0 +1,22 @@
+.listCard {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  
+  margin-bottom: 10px;
+  padding: 4px;
+
+  width: 500px;
+}
+
+.listCardOff {
+  border: 2px solid red;
+}
+
+.listCardOn {
+  border: 2px solid green;
+}
+
+.image {
+  margin-right: 20px;
+}
