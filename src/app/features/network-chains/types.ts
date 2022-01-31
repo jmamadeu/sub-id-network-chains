@@ -8,10 +8,19 @@ export type NetworkChainProperties = {
   isActive: boolean;
 };
 
-export type NetworkChainAPIResponse = Omit<NetworkChainProperties, "iconURL" | "isActive">;
+export type NetworkChainAPIResponse = Omit<
+  NetworkChainProperties,
+  "iconURL" | "isActive"
+>;
 
 export type NetworkChainsAPIResponse = {
-  [x: string]: NetworkChainAPIResponse
+  [x: string]: NetworkChainAPIResponse;
 };
 
-export type NetworkChainsArrayAPIResponse = Array<NetworkChainAPIResponse>
+export type NetworkChainsArrayAPIResponse = Array<NetworkChainAPIResponse>;
+
+export type ReduceChainStatusType = {
+  [x: string]: boolean;
+};
+
+export type NetworkChainStatusProps = { name: string; isActive: boolean };

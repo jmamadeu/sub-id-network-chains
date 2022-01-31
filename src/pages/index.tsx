@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { v4 } from "uuid";
 import {
   apiSlice,
   useGetNetworkChainsQuery
 } from "../app/features/network-chains";
-import { FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS } from "../app/features/network-chains/utils";
+import { fetchNetworkChainsStatus } from "../app/features/network-chains/utils";
 import { useAppDispatch } from "../app/hooks";
+import { NetworkChainCard } from "../components/network-chains/network-chain-card";
 import { useInterval } from "../hooks/use-interval";
 
 const Home: NextPage = () => {
@@ -15,15 +15,29 @@ const Home: NextPage = () => {
   const { data: networkChains } = useGetNetworkChainsQuery();
 
   useInterval(async () => {
-    networkChains?.map(async (chain) => {
+    if (!networkChains) return;
+
+    try {
+      const networkStatus = await fetchNetworkChainsStatus(networkChains);
+
       dispatch(
-        apiSlice.endpoints.getNetworkChainStatus.initiate(
-          chain.name.toLowerCase(),
-          { forceRefetch: true },
+        apiSlice.util.updateQueryData(
+          "getNetworkChains",
+          undefined,
+          (draftNetworkChains) => {
+            draftNetworkChains = draftNetworkChains.map((chain) => ({
+              ...chain,
+              isActive: networkStatus[chain.name.toLowerCase()],
+            }));
+
+            return draftNetworkChains;
+          },
         ),
       );
-    });
-  }, FETCH_CONNECTION_CHAINS_TIME_IN_MLSECONDS);
+    } catch (err) {}
+  }, 5000);
+
+  console.log(networkChains, "test");
 
   return (
     <div>
@@ -39,22 +53,7 @@ const Home: NextPage = () => {
       <main>
         <ul>
           {networkChains?.map((chain) => (
-            <li key={v4()}>
-              <div>
-                <Image
-                  src={chain.iconURL ?? "https://fav.ico"}
-                  alt={chain.icon}
-                  width={50}
-                  height={50}
-                />
-              </div>
-              <div>
-                <span>{chain.name}</span>
-                <span>{chain.ss58Format}</span>
-                <p>{chain.tokenSymbol?.join("")}</p>
-                <p>{chain.tokenDecimals?.join("")}</p>
-              </div>
-            </li>
+            <NetworkChainCard key={v4()} chain={chain} />
           ))}
         </ul>
       </main>
